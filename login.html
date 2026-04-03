@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Placemate - Login</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+  <!-- ================= NAVBAR ================= -->
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipment</a></li>
+
+        <li id="profile-link" style="display:none;">
+          <a href="profile.html">Profile</a>
+        </li>
+
+        <li id="login-link"><a href="login.html">Login</a></li>
+        <li id="signup-link"><a href="signup.html" class="btn">Sign Up</a></li>
+
+        <li id="logout-link" style="display:none;">
+          <a href="#" onclick="logout()">Logout</a>
+        </li>
+
+        <li id="admin-link" style="display:none;">
+          <a href="admin.html">Admin Panel</a>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ================= LOGIN FORM ================= -->
+  <section class="auth-form">
+    <h2>Login</h2>
+
+    <form id="login-form">
+      <div>
+        <label>Email:</label>
+        <input type="email" id="email" required />
+      </div>
+
+      <div>
+        <label>Password:</label>
+        <input type="password" id="password" required />
+      </div>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+  </section>
+
+  <!-- ================= SCRIPT ================= -->
+  <script>
+  document.addEventListener("DOMContentLoaded", () => {
+
+    // ================= NAVBAR =================
+    function updateNavbar() {
+      const user = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+      const logoutLink = document.getElementById("logout-link");
+      const adminLink = document.getElementById("admin-link");
+      const profileLink = document.getElementById("profile-link");
+
+      if (!loginLink || !signupLink || !logoutLink || !adminLink || !profileLink) return;
+
+      if (user) {
+        loginLink.style.display = "none";
+        signupLink.style.display = "none";
+        logoutLink.style.display = "inline-block";
+        profileLink.style.display = "inline-block";
+
+        if (user.email === "admin@placemate.com") {
+          adminLink.style.display = "inline-block";
+        }
+      } else {
+        loginLink.style.display = "inline-block";
+        signupLink.style.display = "inline-block";
+        logoutLink.style.display = "none";
+        adminLink.style.display = "none";
+        profileLink.style.display = "none";
+      }
+    }
+
+    updateNavbar();
+
+    // ================= LOGOUT =================
+    window.logout = async function () {
+      try {
+        await fetch("http://localhost:3002/api/logout", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" }
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+      localStorage.removeItem("loggedInUser");
+      alert("Logged out successfully");
+      window.location.href = "index.html";
+    };
+
+    // ================= LOGIN =================
+    const form = document.getElementById("login-form");
+
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        try {
+          const res = await fetch("http://localhost:3002/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          });
+
+          let data;
+          try {
+            data = await res.json();
+          } catch {
+            throw new Error("Invalid JSON response");
+          }
+
+          if (res.ok) {
+            localStorage.setItem(
+              "loggedInUser",
+              JSON.stringify({ email: data.user?.email || email })
+            );
+
+            alert("Login successful!");
+            updateNavbar();
+
+            window.location.href = "index.html";
+
+          } else {
+            alert(data.error || "Invalid login");
+          }
+
+        } catch (err) {
+          console.error(err);
+          alert("Server error. Make sure backend is running.");
+        }
+      });
+    }
+
+  });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placemate - Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipments</a></li>
+        <li id="admin-panel-link" style="display:none;"><a href="admin.html">Admin Panel</a></li>
+        <li id="login-link" style="display: inline-block;"><a href="login.html">Login</a></li>
+        <li id="login-link" style="display: inline-block;"><a href="signup.html">Sign Up</a></li>
+        <li id="signup-link" style="display: inline-block;"><a href="review.html" class="btn">Reviews</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="campus-image">
+    <div class="image-overlay">
+      <h2>Placemate</h2>
+      <p>Quick, Easy, Reliable – Book Your Classroom Today</p>
+    </div>
+  </section>
+
+  <div class="home">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Welcome to Vidyalankar Institute of Technology</h1>
+        <p>Book classrooms and equipment for your events and activities with ease.</p>
+        <div class="hero-buttons">
+          <a href="venues.html" class="btn">Book Classrooms</a>
+          <a href="equipment.html" class="btn secondary">Book Equipment</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="features">
+      <h2>Why Choose Placemate?</h2>
+      <div class="feature-cards">
+        <div class="card">
+          <h3>Easy Booking</h3>
+          <p>Book classrooms and equipment in just a few clicks.</p>
+        </div>
+        <div class="card">
+          <h3>Real-time Availability</h3>
+          <p>See what's available at any date and time.</p>
+        </div>
+        <div class="card">
+          <h3>24/7 Support</h3>
+          <p>We're here to help you anytime.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 Placemate. All rights reserved.</p>
+    <p>Vidyalankar Institute of Technology, Mumbai</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // DOM ready
+    document.addEventListener("DOMContentLoaded", function () {
+      updateNavbar();
+    });
+
+    function updateNavbar() {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+
+      // Create profile link element if not exists
+      let profileLink = document.getElementById("profile-link");
+      if (!profileLink) {
+        profileLink = document.createElement("li");
+        profileLink.id = "profile-link";
+        profileLink.style.display = "none";
+        profileLink.innerHTML = '<a href="profile.html">Profile</a>';
+        const navLinks = document.getElementById("nav-links");
+        navLinks.appendChild(profileLink);
+      }
+
+      if (loggedInUser) {
+        loginLink.style.display = "none";
+        signupLink.style.display = "none";
+        profileLink.style.display = "inline-block";
+        if (loggedInUser.email === "admin@placemate.com") {
+          document.getElementById("admin-panel-link").style.display = "inline-block";
+        } else {
+          document.getElementById("admin-panel-link").style.display = "none";
+        }
+      } else {
+        loginLink.style.display = "inline-block";
+        signupLink.style.display = "inline-block";
+        profileLink.style.display = "none";
+        document.getElementById("admin-panel-link").style.display = "none";
+      }
+    }
+  </script>
+</body>
+</html>

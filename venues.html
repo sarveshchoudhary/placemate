@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placemate - Classrooms</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Additional styles for enhanced filters */
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 35px;
+      align-items: center;
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      background-color: white;
+      padding: 12px 15px;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+      box-sizing: border-box;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    
+    .filter-group:hover,
+    .filter-group:focus-within {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .filter-group label {
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #2c3e50;
+      font-size: 1.05rem;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+    
+    .filter-group input,
+    .filter-group select {
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      width: 100%;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    
+    .filter-group input:focus,
+    .filter-group select:focus {
+      border-color: #4a90e2;
+      outline: none;
+      box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+    }
+    
+    .filter-actions {
+      display: flex;
+      gap: 15px;
+      align-self: center;
+      justify-content: flex-start;
+    }
+    
+    .filter-actions button {
+      padding: 12px 25px;
+      height: fit-content;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      border: none;
+      color: white;
+      background-color: #4a90e2;
+      box-shadow: 0 2px 6px rgba(74, 144, 226, 0.4);
+    }
+    
+    .filter-actions button:hover {
+      background-color: #357abd;
+      box-shadow: 0 4px 12px rgba(53, 122, 189, 0.6);
+    }
+    
+    .reset-btn {
+      background-color: #6c757d;
+      box-shadow: 0 2px 6px rgba(108, 117, 125, 0.4);
+    }
+    
+    .reset-btn:hover {
+      background-color: #5a6268;
+      box-shadow: 0 4px 12px rgba(90, 98, 104, 0.6);
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+      .filters {
+        grid-template-columns: 1fr;
+        padding: 15px;
+      }
+      
+      .filter-actions {
+        justify-content: center;
+      }
+      
+      .filter-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body class="fade-in">
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipments</a></li>
+        <li id="profile-link" style="display:none;"><a href="profile.html">Profile</a></li>
+        <li id="login-link"><a href="login.html">Login</a></li>
+        <li id="signup-link"><a href="signup.html" class="btn">Sign Up</a></li>
+      </ul>
+    </nav>
+  </header>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      updateNavbar();
+    });
+
+    function updateNavbar() {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+      const profileLink = document.getElementById("profile-link");
+
+      if (loggedInUser) {
+        loginLink.style.display = "none";
+        signupLink.style.display = "none";
+        profileLink.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        signupLink.style.display = "inline-block";
+        profileLink.style.display = "none";
+      }
+    }
+  </script>
+
+  <section class="venue-list">
+    <h2>Available Classrooms & Facilities</h2>
+    
+    
+    <!-- Enhanced Filters Section -->
+    <div class="filters">
+      <div class="filter-group">
+        <label for="search">Search</label>
+        <input type="text" id="search" placeholder="Room number or name">
+      </div>
+      
+      <div class="filter-group">
+        <label for="block">Block</label>
+        <select id="block">
+          <option value="">All Blocks</option>
+          <option value="A">A Block</option>
+          <option value="B">B Block</option>
+          <option value="C">C Block</option>
+          <option value="D">D Block</option>
+          <option value="M">M Block</option>
+          <option value="L">L Block</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="floor">Floor</label>
+        <select id="floor">
+          <option value="">All Floors</option>
+          <option value="G">Ground Floor</option>
+          <option value="1">1st Floor</option>
+          <option value="2">2nd Floor</option>
+          <option value="3">3rd Floor</option>
+          <option value="4">4th Floor</option>
+          <option value="Basement">Basement</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="capacity">Min Capacity</label>
+        <select id="capacity">
+          <option value="0">Any Capacity</option>
+          <option value="20">20+</option>
+          <option value="40">40+</option>
+          <option value="60">60+</option>
+          <option value="100">100+</option>
+          <option value="150">150+</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="facilities">Facilities</label>
+        <select id="facilities">
+          <option value="">Any Facilities</option>
+          <option value="Projector">Projector</option>
+          <option value="AC">Air Conditioning</option>
+          <option value="Sound System">Sound System</option>
+          <option value="Computers">Computers</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="date-filter">Date</label>
+        <input type="date" id="date-filter">
+      </div>
+      
+      <div class="filter-actions">
+        <button id="filter-btn" class="btn">Apply Filters</button>
+        <button id="reset-btn" class="btn reset-btn">Reset</button>
+      </div>
+    </div>
+    
+    <div class="venue-cards">
+      <!-- Classrooms will be dynamically added here -->
+    </div>
+  </section>
+
+  <!-- Booked Venues Section -->
+  <section class="booked-venues">
+    <h2>Booked Venues</h2>
+    <div class="bookings-table-container">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Venue</th>
+            <th>Block/Floor</th>
+            <th>Booked By</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="bookings-table-body">
+          <!-- Booked venues will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Placemate. All rights reserved.</p>
+    <p>Vidyalankar Institute of Technology, Mumbai</p>
+  </footer>
+
+  <script>
+    // Complete venues data with all blocks and rooms
+    const venues = [
+      // A Block (2 floors)
+      { id: "A101", name: "A101", block: "A", floor: "1", capacity: 60, facilities: "Projector, Whiteboard", booked: false },
+      { id: "A102", name: "A102", block: "A", floor: "1", capacity: 60, facilities: "Projector, Whiteboard", booked: false },
+      { id: "A201", name: "A201", block: "A", floor: "2", capacity: 60, facilities: "Projector, Whiteboard", booked: false },
+      { id: "A202", name: "A202", block: "A", floor: "2", capacity: 60, facilities: "Projector, Whiteboard", booked: false },
+
+      // B Block (3 floors)
+      { id: "B101", name: "B101", block: "B", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "B102", name: "B102", block: "B", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "B105", name: "B105", block: "B", floor: "1", capacity: 30, facilities: "Projector, AC", booked: false },
+      { id: "B201", name: "B201", block: "B", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "B202", name: "B202", block: "B", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "B301", name: "B301", block: "B", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "B302", name: "B302", block: "B", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "B-Seminar", name: "B Block Seminar Hall", block: "B", floor: "2", capacity: 120, facilities: "Projector, Sound System, AC", booked: false },
+
+      // C Block (3 floors)
+      { id: "C101", name: "C101", block: "C", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "C102", name: "C102", block: "C", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "C201", name: "C201", block: "C", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "C202", name: "C202", block: "C", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "C301", name: "C301", block: "C", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "C302", name: "C302", block: "C", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+
+      // D Block (3 floors)
+      { id: "D101", name: "D101", block: "D", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "D102", name: "D102", block: "D", floor: "1", capacity: 40, facilities: "Whiteboard", booked: false },
+      { id: "D201", name: "D201", block: "D", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "D202", name: "D202", block: "D", floor: "2", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "D301", name: "D301", block: "D", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "D302", name: "D302", block: "D", floor: "3", capacity: 50, facilities: "Projector, Whiteboard", booked: false },
+      { id: "D-Seminar", name: "D Block Seminar Hall", block: "D", floor: "2", capacity: 100, facilities: "Projector, Sound System, AC", booked: false },
+
+      // M Block (3 floors)
+      { id: "M101", name: "M101", block: "M", floor: "1", capacity: 60, facilities: "Projector, Whiteboard, AC", booked: false },
+      { id: "M102", name: "M102", block: "M", floor: "1", capacity: 60, facilities: "Projector, Whiteboard, AC", booked: false },
+      { id: "M201", name: "M201", block: "M", floor: "2", capacity: 80, facilities: "Projector, Whiteboard, AC", booked: false },
+      { id: "M202", name: "M202", block: "M", floor: "2", capacity: 80, facilities: "Projector, Whiteboard, AC", booked: false },
+      { id: "M301", name: "M301", block: "M", floor: "3", capacity: 100, facilities: "Projector, Whiteboard, AC, Sound System", booked: false },
+      { id: "M302", name: "M302", block: "M", floor: "3", capacity: 100, facilities: "Projector, Whiteboard, AC, Sound System", booked: false },
+      { id: "M401", name: "M401", block: "M", floor: "4", capacity: 120, facilities: "Projector, Whiteboard, AC, Sound System", booked: false },
+      { id: "M402", name: "M402", block: "M", floor: "4", capacity: 120, facilities: "Projector, Whiteboard, AC, Sound System", booked: false },
+      { id: "M413", name: "M413", block: "M", floor: "4", capacity: 50, facilities: "Projector, Whiteboard, AC", booked: false },
+      { id: "Conference Room", name: "Conference Room", block: "M", floor: "2", capacity: 30, facilities: "Projector, AC", booked: false },
+      { id: "Computer Lab 1", name: "Computer Lab 1", block: "M", floor: "2", capacity: 60, facilities: "Computers, Projector, AC", booked: false },
+      { id: "Computer Lab 2", name: "Computer Lab 2", block: "M", floor: "2", capacity: 60, facilities: "Computers, Projector, AC", booked: false },
+
+      // L Block (Basement Labs)
+      { id: "L001", name: "Lab 1", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L002", name: "Lab 2", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L003", name: "Lab 3", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L004", name: "Lab 4", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L005", name: "Lab 5", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L006", name: "Lab 6", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L007", name: "Lab 7", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L008", name: "Lab 8", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+      { id: "L009", name: "Lab 9", block: "L", floor: "Basement", capacity: 30, facilities: "Lab Equipment, Computers", booked: false },
+
+      // Special Rooms
+      { id: "Auditorium", name: "Auditorium", block: "M", floor: "G", capacity: 300, facilities: "Stage, Sound System, Projector, AC", booked: false },
+      { id: "Seminar Hall", name: "Seminar Hall", block: "M", floor: "3", capacity: 150, facilities: "Projector, Sound System, AC", booked: false },
+      { id: "DEN", name: "DEN Playing Room", block: "M", floor: "1", capacity: 20, facilities: "Recreational Equipment", booked: false },
+      { id: "Recording Room", name: "Recording Room", block: "M", floor: "1", capacity: 10, facilities: "Audio Recording Equipment", booked: false },
+      { id: "LCR", name: "Ladies Common Room", block: "M", floor: "1", capacity: 25, facilities: "Lounge Area", booked: false }
+    ];
+
+    // Function to render available venues with filtering
+    function renderVenues() {
+      const venueCards = document.querySelector(".venue-cards");
+      venueCards.innerHTML = "";
+
+      const searchTerm = document.getElementById("search").value.toLowerCase();
+      const blockFilter = document.getElementById("block").value;
+      const floorFilter = document.getElementById("floor").value;
+      const capacityFilter = parseInt(document.getElementById("capacity").value);
+      const facilitiesFilter = document.getElementById("facilities").value;
+      const dateFilter = document.getElementById("date-filter").value;
+
+      // Get bookings for the selected date (if any)
+      const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+      const dateBookings = dateFilter ? bookings.filter(b => b.date === dateFilter) : [];
+
+      const filteredVenues = venues.filter(venue => {
+        const matchesSearch = venue.name.toLowerCase().includes(searchTerm) || 
+                            venue.id.toLowerCase().includes(searchTerm);
+        const matchesBlock = blockFilter === "" || venue.block === blockFilter;
+        const matchesFloor = floorFilter === "" || venue.floor === floorFilter;
+        const matchesCapacity = capacityFilter === 0 || venue.capacity >= capacityFilter;
+        const matchesFacilities = facilitiesFilter === "" || 
+                                venue.facilities.includes(facilitiesFilter);
+        
+        // Check if venue is booked on selected date
+        const isBooked = dateBookings.some(booking => booking.venue === venue.id);
+        
+        return matchesSearch && matchesBlock && matchesFloor && 
+               matchesCapacity && matchesFacilities && !isBooked;
+      });
+
+      if (filteredVenues.length === 0) {
+        venueCards.innerHTML = `
+          <div class="no-results">
+            <p>No classrooms match your search criteria.</p>
+            <button id="clear-filters-btn" class="btn">Clear All Filters</button>
+          </div>
+        `;
+        document.getElementById("clear-filters-btn").addEventListener("click", resetFilters);
+        return;
+      }
+
+      filteredVenues.forEach((venue) => {
+        const card = document.createElement("div");
+        card.className = "venue-card";
+        card.innerHTML = `
+          <h3>${venue.name}</h3>
+          <p><strong>Location:</strong> ${venue.block} Block, Floor ${venue.floor}</p>
+          <p><strong>Capacity:</strong> ${venue.capacity} students</p>
+          <p><strong>Facilities:</strong> ${venue.facilities}</p>
+          <a href="booking.html?venue=${venue.id}" class="btn">Book Now</a>
+        `;
+        venueCards.appendChild(card);
+      });
+    }
+
+    // Function to render booked venues in table format
+    function renderBookedVenues() {
+      const tableBody = document.getElementById("bookings-table-body");
+      tableBody.innerHTML = "";
+
+      const bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+      const dateFilter = document.getElementById("date-filter").value;
+
+      // Filter bookings by approval status and date
+      let filteredBookings = bookings.filter(booking => booking.status === "approved");
+      if (dateFilter) {
+        filteredBookings = filteredBookings.filter(booking => booking.date === dateFilter);
+      }
+
+      if (filteredBookings.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6">No bookings found${dateFilter ? ' for selected date' : ''}.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      filteredBookings.forEach((booking) => {
+        const venue = venues.find(v => v.id === booking.venue);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${venue ? venue.name : booking.venue}</td>
+          <td>${venue ? `${venue.block} Block, Floor ${venue.floor}` : 'N/A'}</td>
+          <td>${booking.name}</td>
+          <td>${booking.date}</td>
+          <td>${booking.startTime} - ${booking.endTime}</td>
+          <td>Approved</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Add event listeners to cancel buttons
+      document.querySelectorAll(".cancel-btn").forEach((button) => {
+        button.addEventListener("click", () => cancelBooking(button.dataset.venue));
+      });
+    }
+
+    // Function to cancel a booking
+    function cancelBooking(venueId) {
+      let bookings = JSON.parse(localStorage.getItem("bookings")) || [];
+      bookings = bookings.filter((booking) => booking.venue !== venueId);
+      localStorage.setItem("bookings", JSON.stringify(bookings));
+      renderBookedVenues();
+      renderVenues(); // Refresh available venues
+    }
+
+    // Function to reset all filters
+    function resetFilters() {
+      document.getElementById("search").value = "";
+      document.getElementById("block").value = "";
+      document.getElementById("floor").value = "";
+      document.getElementById("capacity").value = "0";
+      document.getElementById("facilities").value = "";
+      document.getElementById("date-filter").value = "";
+      renderVenues();
+      renderBookedVenues();
+    }
+
+    // Initialize the page
+    function init() {
+      renderVenues();
+      renderBookedVenues();
+      
+      // Set up event listeners for filters
+      document.getElementById("filter-btn").addEventListener("click", () => {
+        renderVenues();
+        renderBookedVenues();
+      });
+      
+      document.getElementById("reset-btn").addEventListener("click", resetFilters);
+      
+      // Auto-update when date changes
+      document.getElementById("date-filter").addEventListener("change", () => {
+        renderVenues();
+        renderBookedVenues();
+      });
+    }
+
+    // Run the initialization function when the page loads
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

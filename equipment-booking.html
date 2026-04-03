@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placemate - Book Equipment</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* Basic styling if styles.css is not available */
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      background-color: #f9fafb;
+    }
+    header {
+      background-color: #2c3e50;
+      color: white;
+      padding: 1rem;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    ul {
+      display: flex;
+      list-style: none;
+    }
+    li {
+      margin-left: 1.5rem;
+    }
+    a {
+      color: white;
+      text-decoration: none;
+    }
+    .btn {
+      background-color: #e74c3c;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .booking-form {
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+    input:focus {
+      border-color: #4a90e2;
+      outline: none;
+      box-shadow: 0 0 5px rgba(74, 144, 226, 0.5);
+    }
+    button {
+      background-color: #4a90e2;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #357abd;
+    }
+    footer {
+      background-color: #f8f9fa;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    #confirmation-message {
+      display: none;
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background-color: #e6ffed;
+      border-left: 6px solid #34a853;
+      border-radius: 8px;
+      color: #2e7d32;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+    }
+    #confirmation-message .booking-details {
+      background-color: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      color: #333;
+      font-weight: 400;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.05);
+    }
+    #confirmation-message .booking-details p {
+      margin: 0.3rem 0;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background-color: #4a90e2;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .back-btn:hover {
+      background-color: #357abd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipment</a></li>
+        <li id="profile-link" style="display:none;"><a href="profile.html">Profile</a></li>
+        <li id="login-link"><a href="login.html">Login</a></li>
+        <li id="signup-link"><a href="signup.html" class="btn">Sign Up</a></li>
+      </ul>
+    </nav>
+  </header>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      updateNavbar();
+    });
+
+    function updateNavbar() {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+      const profileLink = document.getElementById("profile-link");
+
+      if (loggedInUser) {
+        loginLink.style.display = "none";
+        signupLink.style.display = "none";
+        profileLink.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        signupLink.style.display = "inline-block";
+        profileLink.style.display = "none";
+      }
+    }
+  </script>
+
+  <section class="booking-form">
+    <h2>Book Equipment</h2>
+    <form id="equipmentBookingForm">
+      <div class="form-group">
+        <label for="equipment">Equipment</label>
+        <input type="text" id="equipment" name="equipment" readonly>
+      </div>
+      <div class="form-group">
+        <label for="name">Your Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="date">Booking Date</label>
+        <input type="date" id="date" name="date" required>
+      </div>
+      <div class="form-group">
+        <label for="start-time">Start Time</label>
+        <input type="time" id="start-time" name="start-time" required>
+      </div>
+      <div class="form-group">
+        <label for="end-time">End Time</label>
+        <input type="time" id="end-time" name="end-time" required>
+      </div>
+      <div class="form-group">
+        <label for="quantity">Quantity (Max available: <span id="max-quantity">1</span>)</label>
+        <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+      </div>
+      <button type="submit" class="btn">Confirm Booking</button>
+    </form>
+    <div id="confirmation-message" style="display: none; margin-top: 2rem; padding: 1.5rem; background-color: #e6ffed; border-left: 6px solid #34a853; border-radius: 8px; color: #2e7d32; font-weight: 600; box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);">
+      <h3>Booking Request Submitted!</h3>
+      <p>Your equipment booking request has been sent to the admin for approval.</p>
+      <div class="booking-details" style="background-color: white; padding: 1rem; border-radius: 6px; margin-top: 1rem; color: #333; font-weight: 400; box-shadow: inset 0 0 5px rgba(0,0,0,0.05);">
+        <p><strong>Equipment:</strong> <span id="confirm-equipment"></span></p>
+        <p><strong>Date:</strong> <span id="confirm-date"></span></p>
+        <p><strong>Time:</strong> <span id="confirm-time"></span></p>
+      </div>
+      <p>You'll receive a confirmation email once your request is approved.</p>
+      <a href="equipment.html" class="back-btn" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background-color: #4a90e2; color: white; text-decoration: none; border-radius: 6px; font-weight: 600; transition: background-color 0.3s ease;">Back to Equipment</a>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Placemate. All rights reserved.</p>
+    <p>Vidyalankar Institute of Technology, Mumbai</p>
+  </footer>
+
+  <script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const form = document.getElementById("equipmentBookingForm");
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser")) || {};
+
+  // ✅ Autofill
+  if (loggedInUser.name) {
+    document.getElementById("name").value = loggedInUser.name;
+  }
+
+  if (loggedInUser.email) {
+    document.getElementById("email").value = loggedInUser.email;
+  }
+
+  // ✅ Equipment from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const equipmentId = urlParams.get("equipment");
+
+  const equipmentList = [
+    { id: "proj1", name: "Projector 1", quantity: 5 },
+    { id: "proj2", name: "Projector 2", quantity: 3 },
+    { id: "mic1", name: "Wireless Mic Set", quantity: 8 },
+    { id: "mic2", name: "Wired Mic", quantity: 15 },
+    { id: "speaker1", name: "PA Speaker", quantity: 6 },
+    { id: "speaker2", name: "Subwoofer", quantity: 2 },
+    { id: "screen1", name: "Projection Screen", quantity: 4 },
+    { id: "laptop1", name: "Presentation Laptop", quantity: 5 },
+    { id: "cam1", name: "Video Camera", quantity: 3 },
+    { id: "light1", name: "Stage Lights", quantity: 2 },
+  ];
+
+  if (equipmentId) {
+    const item = equipmentList.find(e => e.id === equipmentId);
+
+    if (item) {
+      document.getElementById("equipment").value = item.name;
+      document.getElementById("max-quantity").textContent = item.quantity;
+      document.getElementById("quantity").max = item.quantity;
+    }
+  }
+
+  // 🔥 SUBMIT HANDLER (MOST IMPORTANT)
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    console.log("Submit clicked ✅");
+
+    const equipmentName = document.getElementById("equipment").value;
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+    const date = document.getElementById("date").value;
+    const startTime = document.getElementById("start-time").value;
+    const endTime = document.getElementById("end-time").value;
+    const quantity = document.getElementById("quantity").value;
+
+    // Validation
+    if (!equipmentName || !name || !email) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    if (startTime >= endTime) {
+      alert("End time must be after start time");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3002/api/book", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          service: equipmentName,
+          type: "equipment",   // 🔥 REQUIRED
+          equipment: equipmentName,
+          quantity,
+          date,
+          startTime,
+          endTime
+        })
+      });
+
+      console.log("Response:", res);
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Booking failed");
+      }
+
+      // ✅ Success UI
+      document.getElementById("confirm-equipment").textContent = equipmentName;
+      document.getElementById("confirm-date").textContent = date;
+      document.getElementById("confirm-time").textContent =
+        `${startTime} - ${endTime}`;
+
+      document.getElementById("confirmation-message").style.display = "block";
+      form.style.display = "none";
+
+    } catch (err) {
+      console.error(err);
+      alert("Error: " + err.message);
+    }
+
+  });
+
+});
+</script>
+</body>
+</html>
