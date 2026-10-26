@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package booking;
+
+service BookingService {
+    rpc CreateBooking (BookingRequest) returns (BookingResponse);
+    rpc GetBooking (BookingLookupRequest) returns (BookingResponse);
+}
+message BookingRequest {
+    string name = 1;
+    string email = 2;
+    string classroom = 3;
+    string date = 4;
+    string time = 5;
+    int32 lamport_time = 6;
+}
+message BookingLookupRequest {
+    string classroom = 1;
+}
+
+message BookingResponse {
+    string message = 1;
+    int32 lamport_time = 2;
+}

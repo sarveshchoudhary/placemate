@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: placemate
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: placemate
+  template:
+    metadata:
+      labels:
+        app: placemate
+    spec:
+      containers:
+        - name: placemate
+          image: placemate-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+          envFrom:
+            - secretRef:
+                name: placemate-mysql
+        - name: placemate-grpc
+          image: placemate-backend:latest
+          imagePullPolicy: IfNotPresent
+          command: ["node", "grpc/bookingServer.cjs"]
+          ports:
+            - name: grpc
+              containerPort: 50051
+          envFrom:
+            - secretRef:
+                name: placemate-mysql

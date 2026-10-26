@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Review</title>
+    <style>
+        body{
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: white;
+            color: green;
+        }
+
+        nav{
+            background-color:  #4A90E2;
+            padding: 20px 30px 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            top: 0%;
+            left: 0%;
+            right: 0%;
+            z-index: 1000;
+             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+
+        }
+        nav .logo {
+      color: #fff;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+      padding: 0;
+      margin: 0;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: white;
+      font-weight: 500;
+      font-size: 16px;
+      transition: 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      color: #d2fff7;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 180px auto 40px;
+      padding: 20px;
+    }
+
+    h2, h3 {
+      color: #000000;
+    }
+
+    .overall-rating {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 12px rgb(180, 37, 37);
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .rating-stars {
+      font-size: 28px;
+      color: #f9c80e;
+    }
+
+    .review-section {
+      margin-bottom: 40px;
+    }
+
+    .review-card {
+      background: #fff;
+      padding: 15px 20px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    }
+
+    .review-card h4 {
+      margin: 0;
+      color: #074051;
+    }
+
+    .review-card p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .review-card .stars {
+      color: #f9c80e;
+      font-size: 16px;
+    }
+
+    form {
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.08);
+      margin-bottom: 60px;
+    }
+
+    form label {
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #3aaf9f;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #2d9c8e;
+    }
+
+    footer {
+      background-color: #074051;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .container {
+        margin: 250px 20px 40px;
+      }
+    }
+
+    </style>
+</head>
+<body>
+    <nav>
+    <div class="logo">Placemate</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="venues.html">Services</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="Index.html">logout</a></li>    </ul>
+  </nav>
+
+  <div class="container">
+
+    <div class="overall-rating">
+      <h2>🌟 Overall Customer Rating</h2>
+      <div class="rating-stars">⭐⭐⭐⭐☆ (4.5 / 5)</div>
+      <p>Based on 240+ verified customer reviews</p>
+    </div>
+
+    <!--venue and eqipment Reviews -->
+    <div class="review-section">
+      <h3>Venue and Equipment booking</h3>
+      <div class="review-card">
+        <h4>Aarav Sinha</h4>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>Very easy to book the venue and equipments for use!</p>
+      </div>
+      <div class="review-card">
+        <h4>Meera K.</h4>
+        <div class="stars">⭐⭐⭐⭐</div>
+        <p>Good service overall. Just a small delay, but well executed.</p>
+      </div>
+    </div>
+
+    <!--  venue booking Reviews -->
+    <div class="review-section">
+      <h3>Venue Booking </h3>
+      <div class="review-card">
+        <h4>Rahul Deshmukh</h4>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>made arrangement on very urgent notice!</p>
+      </div>
+      <div class="review-card">
+        <h4>Priya Jain</h4>
+        <div class="stars">⭐⭐⭐⭐</div>
+        <p>Excellent work for providing equipments.</p>
+      </div>
+    </div>
+
+    <!-- Equipment booking Reviews -->
+    <div class="review-section">
+      <h3>Equipments Booking</h3>
+      <div class="review-card">
+        <h4>Tanvi Rao</h4>
+        <div class="stars">⭐⭐⭐⭐⭐</div>
+        <p>All the eqipments were in good conditions..</p>
+      </div>
+      <div class="review-card">
+        <h4>Imran Khan</h4>
+        <div class="stars">⭐⭐⭐⭐</div>
+        <p>It was so easy to book the eqipments what we needed.</p>
+      </div>
+    </div>
+
+   
+
+    <!-- Submit Review Form -->
+    <div class="review-section">
+      <h3>📝 Submit Your Review</h3>
+      <p>We would love to hear your experience with FreshNest.</p>
+
+      <form>
+        <label for="name">Your Name (optional):</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+
+        <label for="service">Service Used:</label>
+        <select id="service" name="service">
+          <option>Venue Booking</option>
+          <option>Equipment Booking </option>
+          
+        </select>
+
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating">
+          <option>⭐⭐⭐⭐⭐ (5)</option>
+          <option>⭐⭐⭐⭐ (4)</option>
+          <option>⭐⭐⭐ (3)</option>
+          <option>⭐⭐ (2)</option>
+          <option>⭐ (1)</option>
+        </select>
+
+        <label for="review">Your Comments:</label>
+        <textarea id="review" name="review" rows="4" placeholder="Write your review here..."></textarea>
+
+        <button type="submit">Submit Review</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  const form = document.querySelector('form');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      name: document.getElementById('name').value,
+      service: document.getElementById('service').value,
+      rating: document.getElementById('rating').value,
+      review: document.getElementById('review').value
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/submit-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.text();
+      alert(result);
+      form.reset();
+    } catch (error) {
+      alert('Error submitting review');
+      console.error(error);
+    }
+  });
+</script>
+    
+    
+</body>
+</html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Placemate - My Profile</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    .profile-container {
+      max-width: 1000px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background-color: #4A90E2;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      margin-right: 20px;
+    }
+
+    .user-details h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .user-details p {
+      margin: 5px 0 0;
+      color: #666;
+    }
+
+    .logout-btn {
+      background-color: #5bc0de;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .logout-btn:hover {
+      background-color: #31b0d5;
+    }
+
+    .profile-section {
+      margin-bottom: 30px;
+    }
+
+    .profile-section h3 {
+      color: #4A90E2;
+      margin-bottom: 15px;
+    }
+
+    .bookings-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .bookings-table th,
+    .bookings-table td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .bookings-table th {
+      background-color: #f8f9fa;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      color: #f0ad4e;
+      font-weight: bold;
+    }
+
+    .status-approved {
+      color: #5cb85c;
+      font-weight: bold;
+    }
+
+    .status-rejected {
+      color: #d9534f;
+      font-weight: bold;
+    }
+
+    .cancel-btn {
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .cancel-btn:hover {
+      background-color: #c9302c;
+    }
+
+    .no-bookings {
+      text-align: center;
+      color: #666;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipments</a></li>
+        <li id="profile-link" style="display:none;"><a href="profile.html">Profile</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <div class="user-details">
+          <h2 id="user-name">User Name</h2>
+          <p id="user-email">user@example.com</p>
+        </div>
+      </div>
+      <button id="logout-btn" class="logout-btn">Logout</button>
+    </div>
+
+    <div class="profile-section">
+      <h3>My Venue Bookings</h3>
+      <div class="bookings-table-container">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Venue</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Approved by Admin</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="venue-bookings-body">
+            <!-- Venue bookings will be populated here -->
+          </tbody>
+        </table>
+        <div id="no-venue-bookings" class="no-bookings" style="display: none;">
+          You haven't booked any venues yet.
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-section">
+      <h3>My Equipment Bookings</h3>
+      <div class="bookings-table-container">
+        <table class="bookings-table">
+          <thead>
+            <tr>
+              <th>Equipment</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Quantity</th>
+              <th>Approved by Admin</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="equipment-bookings-body">
+            <!-- Equipment bookings will be populated here -->
+          </tbody>
+        </table>
+        <div id="no-equipment-bookings" class="no-bookings" style="display: none;">
+          You haven't booked any equipment yet.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+  if (!loggedInUser) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  const name = loggedInUser.name || "User";
+  const email = loggedInUser.email || "";
+
+  document.getElementById("user-name").textContent = name;
+  document.getElementById("user-email").textContent = email;
+  document.getElementById("user-avatar").textContent =
+    name.charAt(0).toUpperCase();
+
+  // Logout
+  document.getElementById("logout-btn").addEventListener("click", function () {
+    localStorage.removeItem("loggedInUser");
+    alert("Logged out successfully!");
+    window.location.href = "index.html";
+  });
+
+  // 🔥 CALL BOTH FUNCTIONS
+  renderUserVenueBookings();
+  renderUserEquipmentBookings();
+
+  // ================= VENUE BOOKINGS =================
+  async function renderUserVenueBookings() {
+    try {
+      const res = await fetch(
+        `http://localhost:3002/api/my-bookings?email=${email}`
+      );
+
+      const bookings = await res.json();
+
+      const tableBody = document.getElementById("venue-bookings-body");
+      const noData = document.getElementById("no-venue-bookings");
+
+      tableBody.innerHTML = "";
+
+      // ✅ FILTER ONLY VENUE
+      const venueBookings = bookings.filter(b => b.type !== "equipment");
+
+      if (!venueBookings.length) {
+        noData.style.display = "block";
+        return;
+      }
+
+      noData.style.display = "none";
+
+      venueBookings.forEach((b) => {
+        const row = `
+          <tr>
+            <td>${b.classroom || b.service || "-"}</td>
+            <td>${b.date || "-"}</td>
+            <td>${b.startTime || "-"} - ${b.endTime || "-"}</td>
+            <td>${b.status || "Pending"}</td>
+            <td><button class="cancel-btn" data-type="venue" data-id="${b.id}">Cancel</button></td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+
+      addCancelHandlers(tableBody);
+
+    } catch (err) {
+      console.error("Venue booking error:", err);
+    }
+  }
+
+  // ================= EQUIPMENT BOOKINGS =================
+  async function renderUserEquipmentBookings() {
+    try {
+      const res = await fetch(
+        `http://localhost:3002/api/my-bookings?email=${email}`
+      );
+
+      const bookings = await res.json();
+
+      const tableBody = document.getElementById("equipment-bookings-body");
+      const noData = document.getElementById("no-equipment-bookings");
+
+      tableBody.innerHTML = "";
+
+      // ✅ FILTER ONLY EQUIPMENT
+      const equipmentBookings = bookings.filter(b => b.type === "equipment");
+
+      if (!equipmentBookings.length) {
+        noData.style.display = "block";
+        return;
+      }
+
+      noData.style.display = "none";
+
+      equipmentBookings.forEach((b) => {
+        const row = `
+          <tr>
+            <td>${b.equipment || "-"}</td>
+            <td>${b.date || "-"}</td>
+            <td>${b.startTime || "-"} - ${b.endTime || "-"}</td>
+            <td>${b.quantity || 1}</td>
+            <td>${b.status || "Pending"}</td>
+            <td><button class="cancel-btn" data-type="equipment" data-id="${b.id}">Cancel</button></td>
+          </tr>
+        `;
+        tableBody.innerHTML += row;
+      });
+
+      addCancelHandlers(tableBody);
+
+    } catch (err) {
+      console.error("Equipment booking error:", err);
+    }
+  }
+
+  function addCancelHandlers(tableBody) {
+    tableBody.querySelectorAll(".cancel-btn").forEach((button) => {
+      button.addEventListener("click", async () => {
+        if (!confirm("Cancel this booking?")) return;
+
+        button.disabled = true;
+        try {
+          const res = await fetch(
+            `http://localhost:3002/api/bookings/${button.dataset.type}/${button.dataset.id}`,
+            {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email })
+            }
+          );
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Failed to cancel booking");
+
+          await Promise.all([
+            renderUserVenueBookings(),
+            renderUserEquipmentBookings()
+          ]);
+        } catch (err) {
+          button.disabled = false;
+          console.error("Booking cancellation error:", err);
+          alert("Cancellation failed: " + err.message);
+        }
+      });
+    });
+  }
+
+});
+</script>
+</body>
+</html>

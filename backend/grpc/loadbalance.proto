@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package loadbalance;
+
+service WorkerService {
+  rpc HandleRequest (WorkRequest) returns (WorkReply);
+}
+
+message WorkRequest {
+  int32 request_id = 1;
+}
+
+message WorkReply {
+  int32 request_id = 1;
+  string handled_by = 2;
+  string status = 3;
+}

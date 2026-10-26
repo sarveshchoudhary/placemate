@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - Placemate</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    .admin-table-actions button {
+      margin-right: 10px;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .approve-btn {
+      background-color: #4CAF50;
+      color: white;
+    }
+    .reject-btn {
+      background-color: #E74C3C;
+      color: white;
+    }
+    .approve-btn:hover {
+      background-color: #45a049;
+    }
+    .reject-btn:hover {
+      background-color: #c0392b;
+    }
+    .status-approved {
+      color: green;
+      font-weight: bold;
+    }
+    .status-rejected {
+      color: red;
+      font-weight: bold;
+    }
+    .status-pending {
+      color: orange;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Placemate Admin</div>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="admin.html">Admin Panel</a></li>
+        <li><a href="#" onclick="logout()" class="btn">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="booked-venues">
+    <h2 style="text-align:center;">Pending Venue Bookings</h2>
+    <div class="bookings-table-container">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Venue</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="booking-table-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="booked-equipment">
+    <h2 style="text-align:center;">Pending Equipment Bookings</h2>
+    <div class="bookings-table-container">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Equipment</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="equipment-booking-table-body">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Placemate. All rights reserved.</p>
+    <p>Vidyalankar Institute of Technology, Mumbai</p>
+  </footer>
+
+ <script>
+async function loadBookings() {
+  try {
+    const res = await fetch("http://localhost:3002/api/bookings");
+    const data = await res.json();
+
+    console.log("Admin Data:", data);
+
+    const venueTable = document.getElementById("booking-table-body");
+    const equipmentTable = document.getElementById("equipment-booking-table-body");
+    venueTable.innerHTML = "";
+    equipmentTable.innerHTML = "";
+
+    const renderRow = (b) => {
+      const normalizedStatus = String(b.status || "pending").toLowerCase();
+      const isPending = normalizedStatus === "pending";
+      const label = b.type === "equipment"
+        ? (b.equipment || b.service || "-")
+        : (b.classroom || b.service || b.venue || "-");
+      const row = `
+<tr>
+  <td>${label}</td>
+  <td>${b.name || "-"}</td>
+  <td>${b.email || "-"}</td>
+  <td>${b.date || "-"}</td>
+  <td>${b.startTime ? b.startTime : "-"} - ${b.endTime ? b.endTime : "-"}</td>
+  <td class="status-${normalizedStatus}">
+    ${normalizedStatus}
+  </td>
+  <td>
+    ${isPending ? `
+      <button onclick="updateStatus('${b.PK}','Approved')">Approve</button>
+      <button onclick="updateStatus('${b.PK}','Rejected')">Reject</button>
+    ` : "—"}
+  </td>
+</tr>
+`;
+      return row;
+    };
+
+    data.filter((booking) => booking.type !== "equipment")
+      .forEach((booking) => {
+        venueTable.innerHTML += renderRow(booking);
+      });
+    data.filter((booking) => booking.type === "equipment")
+      .forEach((booking) => {
+        equipmentTable.innerHTML += renderRow(booking);
+      });
+
+    if (!venueTable.innerHTML) {
+      venueTable.innerHTML = "<tr><td colspan='7'>No venue bookings found</td></tr>";
+    }
+    if (!equipmentTable.innerHTML) {
+      equipmentTable.innerHTML = "<tr><td colspan='7'>No equipment bookings found</td></tr>";
+    }
+
+  } catch (err) {
+    console.error("Admin fetch error:", err);
+  }
+}
+
+async function updateStatus(PK, status) {
+  try {
+    const res = await fetch("http://localhost:3002/api/update-status", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ PK, status })
+    });
+
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || "Status update failed");
+    }
+
+    alert("Updated!");
+    await loadBookings();
+  } catch (err) {
+    console.error("Admin status update error:", err);
+    alert(`Update failed: ${err.message}`);
+  }
+}
+
+loadBookings();
+</script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placemate - Equipment</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">Placemate</div>
+      <ul id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="venues.html">Classrooms</a></li>
+        <li><a href="equipment.html">Equipments</a></li>
+        <li id="profile-link" style="display:none;"><a href="profile.html">Profile</a></li>
+        <li id="login-link"><a href="login.html">Login</a></li>
+        <li id="signup-link"><a href="signup.html" class="btn">Sign Up</a></li>
+      </ul>
+    </nav>
+  </header>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      updateNavbar();
+
+      // Add fade-out effect on link clicks
+      document.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', function (e) {
+          const href = this.getAttribute('href');
+          if (href && !href.startsWith('#') && !href.startsWith('javascript:')) {
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+              window.location.href = href;
+            }, 500);
+          }
+        });
+      });
+    });
+
+    function updateNavbar() {
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+      const loginLink = document.getElementById("login-link");
+      const signupLink = document.getElementById("signup-link");
+      const profileLink = document.getElementById("profile-link");
+
+      if (loggedInUser) {
+        loginLink.style.display = "none";
+        signupLink.style.display = "none";
+        profileLink.style.display = "inline-block";
+      } else {
+        loginLink.style.display = "inline-block";
+        signupLink.style.display = "inline-block";
+        profileLink.style.display = "none";
+      }
+    }
+  </script>
+
+  <section class="equipment-list">
+    <h2>Available Equipment</h2>
+    <div class="filters">
+      <div class="filter-group">
+        <label for="equipment-search">Search</label>
+        <input type="text" id="equipment-search" placeholder="Search equipment">
+      </div>
+      <div class="filter-group">
+        <label for="equipment-type">Type</label>
+        <select id="equipment-type">
+          <option value="">All Types</option>
+          <option value="audio">Audio Equipment</option>
+          <option value="visual">Visual Equipment</option>
+          <option value="other">Other Equipment</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="equipment-date">Date</label>
+        <input type="date" id="equipment-date">
+      </div>
+      <div class="filter-group filter-actions">
+        <button id="equipment-filter-btn">Search</button>
+      </div>
+    </div>
+    <div class="equipment-cards">
+      <!-- Equipment will be dynamically added here -->
+    </div>
+  </section>
+
+  <!-- Booked Equipment Section -->
+  <section class="booked-equipment">
+    <h2>Booked Equipment</h2>
+    <div class="bookings-table-container">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Equipment</th>
+            <th>Booked By</th>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="equipment-table-body">
+          <!-- Booked equipment will be dynamically added here -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Placemate. All rights reserved.</p>
+    <p>Vidyalankar Institute of Technology, Mumbai</p>
+  </footer>
+
+  <script>
+    // Sample data for available equipment
+    const equipment = [
+      { id: "proj1", name: "Projector 1", type: "visual", quantity: 5, available: 5, description: "HD Projector with HDMI input" },
+      { id: "proj2", name: "Projector 2", type: "visual", quantity: 3, available: 3, description: "4K Projector with multiple inputs" },
+      { id: "mic1", name: "Wireless Mic Set", type: "audio", quantity: 8, available: 8, description: "Set of 2 wireless microphones with receiver" },
+      { id: "mic2", name: "Wired Mic", type: "audio", quantity: 15, available: 15, description: "Standard wired microphone" },
+      { id: "speaker1", name: "PA Speaker", type: "audio", quantity: 6, available: 6, description: "Portable PA speaker with stand" },
+      { id: "speaker2", name: "Subwoofer", type: "audio", quantity: 2, available: 2, description: "Powerful subwoofer for events" },
+      { id: "screen1", name: "Projection Screen", type: "visual", quantity: 4, available: 4, description: "120\" motorized projection screen" },
+      { id: "laptop1", name: "Presentation Laptop", type: "other", quantity: 5, available: 5, description: "Laptop with presentation software" },
+      { id: "cam1", name: "Video Camera", type: "visual", quantity: 3, available: 3, description: "4K video camera with tripod" },
+      { id: "light1", name: "Stage Lights", type: "other", quantity: 2, available: 2, description: "Set of 4 LED stage lights" },
+    ];
+
+    // Function to render available equipment with filtering
+    function renderEquipment() {
+      const equipmentCards = document.querySelector(".equipment-cards");
+      equipmentCards.innerHTML = "";
+
+      const searchTerm = document.getElementById("equipment-search").value.toLowerCase();
+      const typeFilter = document.getElementById("equipment-type").value;
+      const dateFilter = document.getElementById("equipment-date").value;
+
+      // Get bookings for the selected date (if any)
+      const bookings = JSON.parse(localStorage.getItem("equipmentBookings")) || [];
+      const dateBookings = dateFilter ? bookings.filter(b => b.date === dateFilter) : [];
+
+      // Calculate availability
+      const equipmentWithAvailability = equipment.map(item => {
+        const bookedForDate = dateBookings.filter(b => b.equipmentId === item.id).reduce((acc, b) => acc + parseInt(b.quantity || 1), 0);
+        return {
+          ...item,
+          available: item.quantity - bookedForDate
+        };
+      });
+
+      const filteredEquipment = equipmentWithAvailability.filter(item => {
+        const matchesSearch = item.name.toLowerCase().includes(searchTerm) || 
+                             item.description.toLowerCase().includes(searchTerm);
+        const matchesType = typeFilter === "" || item.type === typeFilter;
+        return matchesSearch && matchesType && item.available > 0;
+      });
+
+      if (filteredEquipment.length === 0) {
+        equipmentCards.innerHTML = "<p>No equipment matches your search criteria.</p>";
+        return;
+      }
+
+      filteredEquipment.forEach((item) => {
+        const card = document.createElement("div");
+        card.className = "equipment-card";
+        card.innerHTML = `
+          <h3>${item.name}</h3>
+          <p><strong>Type:</strong> ${item.type === 'audio' ? 'Audio' : item.type === 'visual' ? 'Visual' : 'Other'}</p>
+          <p><strong>Available:</strong> ${item.available} of ${item.quantity}</p>
+          <p><strong>Description:</strong> ${item.description}</p>
+          <a href="equipment-booking.html?equipment=${item.id}" class="btn">Book Now</a>
+        `;
+        equipmentCards.appendChild(card);
+      });
+    }
+
+    // Function to render booked equipment in table format
+    function renderBookedEquipment() {
+      const tableBody = document.getElementById("equipment-table-body");
+      tableBody.innerHTML = "";
+
+      const bookings = JSON.parse(localStorage.getItem("equipmentBookings")) || [];
+      const dateFilter = document.getElementById("equipment-date").value;
+      const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+      let filteredBookings = bookings.filter(booking => booking.status === "approved");
+      if (dateFilter) {
+        filteredBookings = filteredBookings.filter(booking => booking.date === dateFilter);
+      }
+
+      if (filteredBookings.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="5">No equipment bookings found${dateFilter ? ' for selected date' : ''}.</td>
+          </tr>
+        `;
+        return;
+      }
+
+      filteredBookings.forEach((booking) => {
+        console.log("Booking equipmentId:", booking.equipmentId);
+        console.log("Equipment array:", equipment);
+        const equipmentItem = equipment.find(e => e.id === booking.equipmentId);
+        console.log("Found equipment item:", equipmentItem);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${equipmentItem ? equipmentItem.name : booking.equipmentId}</td>
+          <td>${booking.name || loggedInUser?.name || 'N/A'}</td>
+          <td>${booking.date}</td>
+          <td>${booking.startTime} - ${booking.endTime}</td>
+          <td>Approved</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Add event listeners to cancel buttons
+      document.querySelectorAll(".cancel-btn").forEach((button) => {
+        button.addEventListener("click", () => cancelEquipmentBooking(button.dataset.bookingId));
+      });
+    }
+
+    // Function to cancel an equipment booking
+    function cancelEquipmentBooking(bookingId) {
+      let bookings = JSON.parse(localStorage.getItem("equipmentBookings")) || [];
+      bookings = bookings.filter((booking) => booking.id !== bookingId);
+      localStorage.setItem("equipmentBookings", JSON.stringify(bookings));
+      renderBookedEquipment();
+      renderEquipment(); // Refresh availability
+    }
+
+    // Initialize the page
+    function init() {
+      renderEquipment();
+      renderBookedEquipment();
+      
+      // Set up event listeners for filters
+      document.getElementById("equipment-filter-btn").addEventListener("click", () => {
+        renderEquipment();
+        renderBookedEquipment();
+      });
+      
+      document.getElementById("equipment-date").addEventListener("change", () => {
+        renderEquipment();
+        renderBookedEquipment();
+      });
+    }
+
+    // Run the initialization function when the page loads
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>

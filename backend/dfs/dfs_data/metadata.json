@@ -1,0 +1,21 @@
+{
+  "lamport": 352,
+  "nodes": {
+    "dfs-store-1": {
+      "address": "localhost:60511",
+      "alive": true,
+      "last_heartbeat": 1791465218.8511984
+    },
+    "dfs-store-2": {
+      "address": "localhost:60512",
+      "alive": true,
+      "last_heartbeat": 1791465218.7236683
+    },
+    "dfs-store-3": {
+      "address": "localhost:60513",
+      "alive": false,
+      "last_heartbeat": 1791465210.5034487
+    }
+  },
+  "files": {}
+}
